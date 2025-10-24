@@ -89,7 +89,7 @@ function App() {
         <button
           onClick={() => setOffset(Math.max(0, offset - limit))}
           disabled={offset === 0}
-          className="px-4 py-2 bg-primary text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow hover:bg-red-500 transition"
+          className="px-4 py-2 bg-primary bg-red-500 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed shadow hover:bg-red-700 transition"
         >
           Anterior
         </button>
@@ -98,7 +98,7 @@ function App() {
         </span>
         <button
           onClick={() => setOffset(offset + limit)}
-          className="px-4 py-2 bg-primary text-white rounded-lg shadow hover:bg-red-500 transition"
+          className="px-4 py-2 bg-primary text-white bg-red-500 rounded-lg shadow hover:bg-red-700 transition"
         >
           Siguiente
         </button>
