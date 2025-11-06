@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import PokemonCard from "./components/PokemonCard";
 import PokemonModal from "./components/PokemonModal";
+import RandomPokemonButton from "./components/Notificacion";
 
 const API_BASE = "https://pokeapi.co/api/v2/pokemon";
 
@@ -65,6 +66,8 @@ function App() {
             onChange={(e) => setQuery(e.target.value)}
           />
         </div>
+        <br />
+        <RandomPokemonButton />
       </header>
 
       <main className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
@@ -111,7 +114,9 @@ function App() {
           onClose={() => setSelectedPokemon(null)}
         />
       )}
+    
     </div>
+    
   );
 }
 
