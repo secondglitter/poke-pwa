@@ -1,70 +1,47 @@
 import { useState } from "react";
 
 export default function RandomPokemonButton() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState(null);
 
-  // 🔔 Pide permiso de notificaciones antes de usarlas
-  const requestNotificationPermission = async () => {
-    if (Notification.permission === "default") {
-      const permission = await Notification.requestPermission();
-      console.log("Permiso de notificación:", permission);
-    }
-  };
-
-  // 🧠 Capitaliza el nombre del Pokémon
-  const capitalize = str => str.charAt(0).toUpperCase() + str.slice(1);
-
-  // 🧩 Muestra la notificación con el nombre e icono del Pokémon
-  const showPokemonNotification = (name, image) => {
-    const notify = () => {
-      new Notification("¡Pokémon encontrado! 🎉", {
-        body: `Has obtenido a ${capitalize(name)} 🐾`,
-        icon: image,
-      });
-    };
-
-    if (Notification.permission === "granted") {
-      notify();
-    } else if (Notification.permission !== "denied") {
-      Notification.requestPermission().then(permission => {
-        if (permission === "granted") notify();
-      });
-    } else {
-      alert("⚠️ Las notificaciones están bloqueadas. Habilítalas en el navegador.");
-    }
-  };
-
-  // 🎲 Obtiene un Pokémon aleatorio desde la PokéAPI
   const handleRandomPokemon = async () => {
-    await requestNotificationPermission();
-    setIsLoading(true);
-
     try {
       const randomId = Math.floor(Math.random() * 20) + 1;
-      const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
-      const data = await response.json();
+      const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`);
+      const data = await res.json();
 
-      showPokemonNotification(data.name, data.sprites.front_default);
-    } catch (error) {
-      console.error("Error al obtener el Pokémon aleatorio:", error);
-    } finally {
-      setIsLoading(false);
+      // Intenta notificar
+      if ("Notification" in window) {
+        const permission = await Notification.requestPermission();
+        if (permission === "granted") {
+          new Notification("¡Pokémon encontrado!", {
+            body: `Has obtenido a ${data.name}!`,
+            icon: data.sprites.front_default,
+          });
+        }
+      }
+
+      // Siempre muestra un mensaje visible
+      setMessage(`Has obtenido a ${data.name}! 🎉`);
+      setTimeout(() => setMessage(null), 4000);
+    } catch (err) {
+      console.error(err);
     }
   };
 
   return (
     <div className="flex flex-col items-center">
-  <button
+      <button
         onClick={handleRandomPokemon}
-        disabled={isLoading}
-        className={`px-8 py-3 rounded-2xl font-semibold shadow-lg transition-all duration-200 ${
-          isLoading
-            ? "bg-gray-400 text-white cursor-not-allowed"
-            : "bg-red-600  hover:bg-red-400 hover:scale-105"
-        }`}
+        className="bg-yellow-400 text-blue-900 font-semibold px-6 py-3 rounded-2xl shadow-lg hover:bg-yellow-500 transition-all duration-200 hover:scale-105"
       >
-        {isLoading ? "Buscando Pokémon..." : "Obtener Pokémon"}
+        Obtener Pokémon
       </button>
+
+      {message && (
+        <div className="fixed bottom-8 bg-blue-600 text-white px-4 py-2 rounded-xl shadow-md animate-bounce">
+          {message}
+        </div>
+      )}
     </div>
   );
 }
