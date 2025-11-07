@@ -101,3 +101,14 @@ define(['./workbox-9dc17825'], (function (workbox) { 'use strict';
   }), 'GET');
 
 }));
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      await navigator.serviceWorker.register("/sw.js");
+      console.log("Service Worker registrado ✅");
+    } catch (e) {
+      console.error("Error registrando SW:", e);
+    }
+  });
+}
