@@ -20,3 +20,18 @@ registerSW({
     console.log("App lista para usarse offline ✅");
   },
 });
+
+const root = createRoot(document.getElementById("root"));
+root.render(<App />);
+
+// registrar service worker (si existe /sw.js)
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    try {
+      const reg = await navigator.serviceWorker.register("/sw.js");
+      console.log("Service Worker registrado:", reg);
+    } catch (err) {
+      console.error("No se pudo registrar el SW:", err);
+    }
+  });
+}
